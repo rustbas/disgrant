@@ -2,10 +2,11 @@
 
 # set -xe
 
-N=2
+N=20
 SRC_DIR="src"
 OBJ_DIR="obj"
 MAKEFILE="makefile"
+SLEEP_TIME="3"
 
 cat > $SRC_DIR/main.c << EOF
 #include <stdio.h>
@@ -51,7 +52,7 @@ do
 
     echo "$obj_file:" >> $MAKEFILE
     echo "\tgcc $src_file --shared -o $obj_file" >> $MAKEFILE
-    echo "\tsleep 5" >> $MAKEFILE
+    echo "\tsleep $SLEEP_TIME" >> $MAKEFILE
 
 done
 
