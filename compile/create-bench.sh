@@ -42,7 +42,7 @@ done
 
 echo "" >> $MAKEFILE
 
-echo "\tgcc $SRC_DIR/main.c $OBJ_DIR/*.o -o res.o" >> $MAKEFILE
+echo "\t\$(CC) $SRC_DIR/main.c $OBJ_DIR/*.o -o res.o" >> $MAKEFILE
 
 
 for i in $(seq $N)
@@ -51,7 +51,7 @@ do
     obj_file="$OBJ_DIR/lib$i.o"
 
     echo "$obj_file:" >> $MAKEFILE
-    echo "\tgcc $src_file --shared -o $obj_file" >> $MAKEFILE
+    echo "\t\$(CC) $src_file --shared -o $obj_file" >> $MAKEFILE
     echo "\tsleep $SLEEP_TIME" >> $MAKEFILE
 
 done
