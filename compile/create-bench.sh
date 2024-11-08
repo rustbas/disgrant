@@ -8,6 +8,16 @@ OBJ_DIR="obj"
 MAKEFILE="makefile"
 SLEEP_TIME="3"
 
+rm -rf $SRC_DIR
+rm -rf $OBJ_DIR
+
+mkdir --parents $SRC_DIR
+mkdir --parents $OBJ_DIR
+
+##########
+# MAIN.C #
+##########
+
 cat > $SRC_DIR/main.c << EOF
 #include <stdio.h>
 
@@ -18,7 +28,9 @@ int main() {
 }
 EOF
 
-mkdir --parents $SRC_DIR
+##########
+# LIBS.C #
+##########
 
 for i in $(seq $N)
 do
@@ -31,9 +43,12 @@ do
 EOF
 done
 
-mkdir --parents $OBJ_DIR
+############
+# MAKEFILE #
+############
 
-echo -n "all:" > $MAKEFILE
+echo "CC=distcc" > $MAKEFILE
+echo -n "all:" >> $MAKEFILE
 
 for i in $(seq $N)
 do
