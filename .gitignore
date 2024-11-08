@@ -3,3 +3,4 @@ data/
 debian.jessie64.libvirt.box
 compile/main.c
 compile/a.out
+compile/src
