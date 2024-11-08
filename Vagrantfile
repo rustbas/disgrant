@@ -6,6 +6,10 @@ nodes = [
   { :hostname => "slave-1", :ip => "10.200.0.3", :memory => 1024, :cpu => 1, :boxname => "debian.jessie64.libvirt.box" },
 ]
 
+$distcc_install = <<-SCRIPT
+apt install -y distcc
+SCRIPT
+
 Vagrant.configure("2") do |config|
   
   nodes.each do |node|
@@ -14,6 +18,7 @@ Vagrant.configure("2") do |config|
       nodeconfig.vm.box = node[:boxname]
       nodeconfig.vm.hostname = node[:hostname]
       nodeconfig.vm.network :private_network, ip: node[:ip]
+      nodeconfig.vm.provision "shell", inline: $distcc_install
       nodeconfig.vm.provider :libvirt do |vb|
         vb.memory = node[:memory]
         vb.cpus = node[:cpu]
