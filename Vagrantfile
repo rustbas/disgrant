@@ -2,12 +2,15 @@
 # vi: set ft=ruby :
 
 nodes = [
-  { :hostname => "master", :ip => "10.200.0.2", :memory => 1024, :cpu => 1, :boxname => "debian.jessie64.libvirt.box" },
-  { :hostname => "slave-1", :ip => "10.200.0.3", :memory => 1024, :cpu => 1, :boxname => "debian.jessie64.libvirt.box" },
+  { :hostname => "master", :ip => "10.200.1.2", :memory => 1024, :cpu => 1, :boxname => "debian.jessie64.libvirt.box" },
+  { :hostname => "slave-1", :ip => "10.200.1.3", :memory => 1024, :cpu => 1, :boxname => "debian.jessie64.libvirt.box" },
 ]
 
 $distcc_install = <<-SCRIPT
-apt install -y distcc
+apt update
+apt install -y distcc gcc g++
+echo 'export DISTCC_HOSTS="10.200.1.2/24,10.200.1.3/24"' >> ~/.bashrc
+systemctl enable --now distccd
 SCRIPT
 
 Vagrant.configure("2") do |config|
