@@ -2,16 +2,18 @@
 # vi: set ft=ruby :
 
 nodes = [
-  { :hostname => "master", :ip => "10.200.1.2", :memory => 1024, :cpu => 1, :boxname => "debian.jessie64.libvirt.box" },
-  { :hostname => "slave-1", :ip => "10.200.1.3", :memory => 1024, :cpu => 1, :boxname => "debian.jessie64.libvirt.box" },
+  { :hostname => "master",  :ip => "10.200.1.2", :memory => 512, :cpu => 1, :boxname => "debian.jessie64.libvirt.box" },
+  # { :hostname => "slave-1", :ip => "10.200.1.3", :memory => 512, :cpu => 1, :boxname => "debian.jessie64.libvirt.box" },
+  # { :hostname => "slave-2", :ip => "10.200.1.4", :memory => 512, :cpu => 1, :boxname => "debian.jessie64.libvirt.box" },
 ]
 
 $distcc_install = <<-SCRIPT
 apt update
-apt install -y distcc gcc g++
-echo 'export DISTCC_HOSTS="10.200.1.2/24,10.200.1.3/24"' >> ~/.bashrc
-systemctl enable --now distccd
+# apt upgrade -y
+apt install -y make distcc gcc g++
+echo 'export DISTCC_HOSTS="10.200.1.2/24,10.200.1.3/24,10.200.1.4/24"' >> ~/.bashrc
 SCRIPT
+# systemctl enable --now distccd
 
 Vagrant.configure("2") do |config|
   
@@ -22,6 +24,7 @@ Vagrant.configure("2") do |config|
       nodeconfig.vm.hostname = node[:hostname]
       nodeconfig.vm.network :private_network, ip: node[:ip]
       nodeconfig.vm.provision "shell", inline: $distcc_install
+      nodeconfig.vm.provision "file", source: "./compile", destination: "~/compile"
       nodeconfig.vm.provider :libvirt do |vb|
         vb.memory = node[:memory]
         vb.cpus = node[:cpu]

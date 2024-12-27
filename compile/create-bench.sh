@@ -2,7 +2,7 @@
 
 # set -xe
 
-N=20000
+N=200
 SRC_DIR="src"
 OBJ_DIR="obj"
 MAKEFILE="makefile"
