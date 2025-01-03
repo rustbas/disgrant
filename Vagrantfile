@@ -1,33 +1,62 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-nodes = [
-  { :hostname => "master",  :ip => "10.200.1.2", :memory => 512, :cpu => 1, :boxname => "debian.jessie64.libvirt.box" },
-  { :hostname => "slave-1", :ip => "10.200.1.3", :memory => 512, :cpu => 1, :boxname => "debian.jessie64.libvirt.box" },
-  { :hostname => "slave-2", :ip => "10.200.1.4", :memory => 512, :cpu => 1, :boxname => "debian.jessie64.libvirt.box" },
+# Default box
+box_name = "debian.jessie64.libvirt.box"
+
+# Master
+master_node = {
+  :hostname => "master-node", :ip => "10.200.1.2", :memory => 2048, :cpu => 4
+}
+
+# List of slaves
+slaves = [
+  { :memory => 512, :cpu => 1 },
+  { :memory => 512, :cpu => 1 },
+  { :memory => 512, :cpu => 1 }
 ]
 
 $distcc_install = <<-SCRIPT
-apt update
+# apt update
 # apt upgrade -y
-apt install -y make distcc gcc g++
-echo 'export DISTCC_HOSTS="10.200.1.2/24,10.200.1.3/24,10.200.1.4/24"' >> ~/home/vagrant/.bashrc
-SCRIPT
+# apt install -y make distcc gcc g++
+# echo 'export DISTCC_HOSTS="10.200.1.2/24,10.200.1.3/24,10.200.1.4/24"' >> ~/home/vagrant/.bashrc
 # systemctl enable --now distccd
+SCRIPT
 
 Vagrant.configure("2") do |config|
-  
-  nodes.each do |node|
+
+  # Master node's config
+  config.vm.box_check_update = false
+  config.vm.define master_node[:hostname] do |nodeconfig|
+    nodeconfig.vm.box = box_name
+    nodeconfig.vm.hostname = master_node[:hostname]
+    nodeconfig.vm.network :private_network, ip: master_node[:ip]
+    nodeconfig.vm.provision "shell", inline: $distcc_install
+    # nodeconfig.vm.provision "file", source: "./compile", destination: "~/compile"
+    nodeconfig.vm.provider :libvirt do |vb|
+      vb.memory = master_node[:memory]
+      vb.cpus = master_node[:cpu]
+    end
+  end
+
+  # Slaves configs
+  slaves.each_with_index do |slave, i|
     config.vm.box_check_update = false
-    config.vm.define node[:hostname] do |nodeconfig|
-      nodeconfig.vm.box = node[:boxname]
-      nodeconfig.vm.hostname = node[:hostname]
-      nodeconfig.vm.network :private_network, ip: node[:ip]
+    config.vm.define "slave-#{ i+1 }" do |nodeconfig|
+      # Default box-name (cause I have only it)
+      nodeconfig.vm.box = box_name
+      
+      # Hostname: slave-N
+      nodeconfig.vm.hostname = "slave-#{ i+1 }"
+
+      # IP-address: 10.200.1.{N+1}
+      nodeconfig.vm.network :private_network, ip: "10.200.1.#{ i+1 }"
       nodeconfig.vm.provision "shell", inline: $distcc_install
-      nodeconfig.vm.provision "file", source: "./compile", destination: "~/compile"
+      # nodeconfig.vm.provision "file", source: "./compile", destination: "~/compile"
       nodeconfig.vm.provider :libvirt do |vb|
-        vb.memory = node[:memory]
-        vb.cpus = node[:cpu]
+        vb.memory = slave[:memory]
+        vb.cpus = slave[:cpu]
       end
     end
   end
