@@ -11,17 +11,15 @@ master_node = {
 
 # List of slaves
 slaves = [
-  { :memory => 512, :cpu => 1 },
-  { :memory => 512, :cpu => 1 },
-  { :memory => 512, :cpu => 1 }
+  { :memory => 512,  :cpu => 1 },
+  # { :memory => 512,  :cpu => 1 },
+  # { :memory => 1024, :cpu => 2 }
 ]
 
 $distcc_install = <<-SCRIPT
 # apt update
-# apt upgrade -y
 # apt install -y make distcc gcc g++
 # echo 'export DISTCC_HOSTS="10.200.1.2/24,10.200.1.3/24,10.200.1.4/24"' >> ~/home/vagrant/.bashrc
-# systemctl enable --now distccd
 SCRIPT
 
 Vagrant.configure("2") do |config|
@@ -31,7 +29,7 @@ Vagrant.configure("2") do |config|
   config.vm.define master_node[:hostname] do |nodeconfig|
     nodeconfig.vm.box = box_name
     nodeconfig.vm.hostname = master_node[:hostname]
-    nodeconfig.vm.network :private_network, ip: master_node[:ip]
+    nodeconfig.vm.network(:private_network, ip: master_node[:ip])
     nodeconfig.vm.provision "shell", inline: $distcc_install
     # nodeconfig.vm.provision "file", source: "./compile", destination: "~/compile"
     nodeconfig.vm.provider :libvirt do |vb|
@@ -50,8 +48,8 @@ Vagrant.configure("2") do |config|
       # Hostname: slave-N
       nodeconfig.vm.hostname = "slave-#{ i+1 }"
 
-      # IP-address: 10.200.1.{N+1}
-      nodeconfig.vm.network :private_network, ip: "10.200.1.#{ i+1 }"
+      # IP-address: 10.200.1.{N+2}
+      nodeconfig.vm.network :private_network, ip: "10.200.1.#{ i+2 }"
       nodeconfig.vm.provision "shell", inline: $distcc_install
       # nodeconfig.vm.provision "file", source: "./compile", destination: "~/compile"
       nodeconfig.vm.provider :libvirt do |vb|
