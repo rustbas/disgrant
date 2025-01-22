@@ -18,7 +18,7 @@ slaves = [
 
 $distcc_install = <<-SCRIPT
 apt update
-apt install -y make distcc gcc g++
+apt install -y make distcc gcc g++ tmux 
 # echo 'export DISTCC_HOSTS="10.200.1.2/24,10.200.1.3/24,10.200.1.4/24"' >> ~/home/vagrant/.bashrc
 SCRIPT
 
