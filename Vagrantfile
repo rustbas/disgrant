@@ -17,8 +17,8 @@ slaves = [
 ]
 
 $distcc_install = <<-SCRIPT
-# apt update
-# apt install -y make distcc gcc g++
+apt update
+apt install -y make distcc gcc g++
 # echo 'export DISTCC_HOSTS="10.200.1.2/24,10.200.1.3/24,10.200.1.4/24"' >> ~/home/vagrant/.bashrc
 SCRIPT
 
@@ -31,7 +31,7 @@ Vagrant.configure("2") do |config|
     nodeconfig.vm.hostname = master_node[:hostname]
     nodeconfig.vm.network(:private_network, ip: master_node[:ip])
     nodeconfig.vm.provision "shell", inline: $distcc_install
-    # nodeconfig.vm.provision "file", source: "./compile", destination: "~/compile"
+    nodeconfig.vm.provision "file", source: "./compile", destination: "~/compile"
     nodeconfig.vm.provider :libvirt do |vb|
       vb.memory = master_node[:memory]
       vb.cpus = master_node[:cpu]
