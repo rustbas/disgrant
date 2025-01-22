@@ -2,7 +2,7 @@
 
 # set -xe
 
-N=200
+N=5
 SRC_DIR="src"
 OBJ_DIR="obj"
 MAKEFILE="makefile"
@@ -72,4 +72,5 @@ do
 done
 
 echo "clean:" >> $MAKEFILE
-echo "\trm obj/*" >> $MAKEFILE
+echo "\trm -f obj/*" >> $MAKEFILE
+echo "\trm -f res.o" >> $MAKEFILE
