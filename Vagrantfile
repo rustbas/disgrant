@@ -6,19 +6,20 @@ box_name = "debian.jessie64.libvirt.box"
 
 # Master
 master_node = {
-  :hostname => "master", :ip => "10.200.1.2", :memory => 2048, :cpu => 2
+  :hostname => "master", :ip => "10.200.1.2", :memory => 512, :cpu => 2
 }
 
 # List of slaves
 slaves = [
-  { :memory => 1024,  :cpu => 2 },
+  { :memory => 512,  :cpu => 1 },
   # { :memory => 512,  :cpu => 1 },
-  # { :memory => 1024, :cpu => 2 }
+  # { :memory => 512,  :cpu => 1 }
 ]
 
 $distcc_install = <<-SCRIPT
 apt update
-apt install -y make distcc gcc g++ tmux 
+apt install -y make distcc gcc g++ tmux libz-dev
+cd /home/vagrant && git clone https://github.com/gi-bielefeld/sans.git
 # echo 'export DISTCC_HOSTS="10.200.1.2/24,10.200.1.3/24,10.200.1.4/24"' >> ~/home/vagrant/.bashrc
 SCRIPT
 
