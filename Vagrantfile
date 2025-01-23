@@ -18,7 +18,7 @@ slaves = [
 
 $distcc_install = <<-SCRIPT
 apt update
-apt install -y make distcc gcc g++ tmux libz-dev git fakeroot build-essential ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
+apt install -y make distcc gcc g++ tmux libz-dev git fakeroot build-essential ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison time
 # wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.gz
 # echo 'export DISTCC_HOSTS="10.200.1.2/24,10.200.1.3/24,10.200.1.4/24"' >> ~/home/vagrant/.bashrc
 SCRIPT
