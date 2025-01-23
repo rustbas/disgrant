@@ -11,8 +11,7 @@ master_node = {
 
 # List of slaves
 slaves = [
-  { :memory => 512,  :cpu => 1 },
-  # { :memory => 512,  :cpu => 1 },
+  { :memory => 4096,  :cpu => 4 },
   # { :memory => 512,  :cpu => 1 }
 ]
 
