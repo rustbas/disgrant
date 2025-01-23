@@ -6,7 +6,7 @@ box_name = "debian.jessie64.libvirt.box"
 
 # Master
 master_node = {
-  :hostname => "master", :ip => "10.200.1.2", :memory => 512, :cpu => 2
+  :hostname => "master", :ip => "10.200.1.2", :memory => 2048, :cpu => 2
 }
 
 # List of slaves
@@ -18,8 +18,8 @@ slaves = [
 
 $distcc_install = <<-SCRIPT
 apt update
-apt install -y wget make distcc gcc g++ tmux libz-dev git fakeroot build-essential ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
-cd /home/vagrant && wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.gz
+apt install -y make distcc gcc g++ tmux libz-dev git fakeroot build-essential ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
+# wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.gz
 # echo 'export DISTCC_HOSTS="10.200.1.2/24,10.200.1.3/24,10.200.1.4/24"' >> ~/home/vagrant/.bashrc
 SCRIPT
 
@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
     nodeconfig.vm.hostname = master_node[:hostname]
     nodeconfig.vm.network(:private_network, ip: master_node[:ip])
     nodeconfig.vm.provision "shell", inline: $distcc_install
-    nodeconfig.vm.provision "file", source: "./compile", destination: "~/compile"
+    nodeconfig.vm.provision "file", source: "./linux-6.13.tar.gz", destination: "~/linux.tar.gz"
     nodeconfig.vm.provider :libvirt do |vb|
       vb.memory = master_node[:memory]
       vb.cpus = master_node[:cpu]
