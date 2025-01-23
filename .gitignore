@@ -8,3 +8,5 @@ compile/src
 compile/obj
 compile/makefile
 compile/res.o
+linux-6.13
+linux-6.13.tar.gz
