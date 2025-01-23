@@ -6,7 +6,7 @@ box_name = "debian.jessie64.libvirt.box"
 
 # Master
 master_node = {
-  :hostname => "master", :ip => "10.200.1.2", :memory => 2048, :cpu => 2
+  :hostname => "master", :ip => "10.200.1.2", :memory => 1024, :cpu => 1
 }
 
 # List of slaves
