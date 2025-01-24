@@ -12,7 +12,6 @@ master_node = {
 # List of slaves
 slaves = [
   { :memory => 4096,  :cpu => 4 },
-  # { :memory => 512,  :cpu => 1 }
 ]
 
 $distcc_install = <<-SCRIPT
