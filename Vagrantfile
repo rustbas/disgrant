@@ -57,8 +57,4 @@ Vagrant.configure("2") do |config|
       end
     end
   end
-  
-  # config.vm.box = "debian.jessie64.libvirt.box"
-  # config.vm.hostname = "distcc-debian1"
-  # config.vm.network :private_network, ip: "10.200.0.2"
 end
