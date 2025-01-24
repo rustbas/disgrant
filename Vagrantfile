@@ -30,7 +30,7 @@ Vagrant.configure("2") do |config|
     nodeconfig.vm.hostname = master_node[:hostname]
     nodeconfig.vm.network(:private_network, ip: master_node[:ip])
     nodeconfig.vm.provision "shell", inline: $distcc_install
-    nodeconfig.vm.provision "file", source: "./linux-6.13.tar.gz", destination: "~/linux.tar.gz"
+    nodeconfig.vm.provision "file", source: "./linux-6.13.tar.gz", destination: "~/linux-6.13.tar.gz"
     nodeconfig.vm.provider :libvirt do |vb|
       vb.memory = master_node[:memory]
       vb.cpus = master_node[:cpu]
