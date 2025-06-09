@@ -28,7 +28,7 @@
           - libssl-dev
           - libelf-dev
           - time
-          - neofetch
+          - hyperfine
 
     - name: Download Kernel codebase
       become: false
