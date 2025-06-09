@@ -33,7 +33,7 @@
     - name: Download Kernel codebase
       become: false
       get_url:
-        url: https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.gz
+        url: "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.gz"
         dest: /home/vagrant/linux.tar.gz
 
     - name: Unarchive Kernel codebase
