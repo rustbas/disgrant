@@ -10,8 +10,10 @@ master_node = {
 }
 
 # List of slaves
-slaves = [
-  { :memory => 4096,  :cpu => 4 },
+nodes = [
+  { :memory => 1024, :cpu => 1 },
+  { :memory => 2048, :cpu => 2 },
+  { :memory => 1024, :cpu => 2 },
 ]
 
 $distcc_install = <<-SCRIPT
@@ -23,37 +25,24 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
 
-  # Master node's config
-  config.vm.box_check_update = false
-  config.vm.define master_node[:hostname] do |nodeconfig|
-    nodeconfig.vm.box = box_name
-    nodeconfig.vm.hostname = master_node[:hostname]
-    nodeconfig.vm.network(:private_network, ip: master_node[:ip])
-    nodeconfig.vm.provision "shell", inline: $distcc_install
-    nodeconfig.vm.provision "file", source: "./linux-6.13.tar.gz", destination: "~/linux-6.13.tar.gz"
-    nodeconfig.vm.provider :libvirt do |vb|
-      vb.memory = master_node[:memory]
-      vb.cpus = master_node[:cpu]
-    end
-  end
-
-  # Slaves configs
-  slaves.each_with_index do |slave, i|
+  # Nodes configs
+  nodes.each_with_index do |node, i|
     config.vm.box_check_update = false
-    config.vm.define "slave-#{ i+1 }" do |nodeconfig|
-      # Default box-name (cause I have only it)
+    config.vm.define "node-#{ i+1 }" do |nodeconfig|
       nodeconfig.vm.box = box_name
       
-      # Hostname: slave-N
-      nodeconfig.vm.hostname = "slave-#{ i+1 }"
+      nodeconfig.vm.hostname = "node-#{ i+1 }"
 
-      # IP-address: 10.200.1.{N+2}
-      nodeconfig.vm.network :private_network, ip: "10.200.1.#{ i+3 }"
-      nodeconfig.vm.provision "shell", inline: $distcc_install
-      # nodeconfig.vm.provision "file", source: "./compile", destination: "~/compile"
+      nodeconfig.vm.network :private_network, ip: "10.200.1.#{ i+2 }"
       nodeconfig.vm.provider :libvirt do |vb|
-        vb.memory = slave[:memory]
-        vb.cpus = slave[:cpu]
+        vb.memory = node[:memory]
+        vb.cpus = node[:cpu]
+      end
+
+      nodeconfig.vm.provision "ansible" do |ansible|
+        ansible.compatibility_mode = "2.0"
+        ansible.playbook = "provisioning/playbook.yaml"
+        ansible.become = true
       end
     end
   end
