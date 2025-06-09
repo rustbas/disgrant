@@ -43,3 +43,13 @@
         dest: /home/vagrant/.
         remote_src: true
 
+    - name: Create a tinyconfig for linux kernel
+      become: false
+      make:
+        chdir: /home/vagrant/linux-6.13/
+        target: tinyconfig
+        jobs: 1
+
+    - name: Run a distcc daemon
+      become: false
+      shell: distccd --daemon --allow-private
