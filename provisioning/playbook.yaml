@@ -1,0 +1,45 @@
+---
+- hosts: all
+  gather_facts: yes
+
+  tasks:
+    - name: Update apt
+      become: true
+      apt: update_cache=yes
+
+    - name: Install packages
+      become: true
+      apt:
+        pkg:
+          - make
+          - distcc
+          - gcc
+          - build-essential
+          - flex
+          - bison
+          - bc
+          - g++
+          - tmux
+          - libz-dev
+          - git
+          - fakeroot
+          - ncurses-dev
+          - xz-utils
+          - libssl-dev
+          - libelf-dev
+          - time
+          - neofetch
+
+    - name: Download Kernel codebase
+      become: false
+      get_url:
+        url: https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.gz
+        dest: /home/vagrant/linux.tar.gz
+
+    - name: Unarchive Kernel codebase
+      become: false
+      unarchive:
+        src: /home/vagrant/linux.tar.gz
+        dest: /home/vagrant/.
+        remote_src: true
+
