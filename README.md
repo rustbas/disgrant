@@ -58,7 +58,7 @@ distcc[^2] (от англ. distributed C/C++/ObjC compiler) — инструме
 
 1. Скачать **box** `debian.bookworm.libvirt.box` с оф. сайта HashiCorp
    (недоступен в РФ). У меня используется версия с `libvirt`.
-2. Скачать исходный код ядра:
+2. Скачать исходный код ядра[^3]:
    ```console
    foo@bar:~/disgrant$ wget -P provisioning/ https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.gz
    ```
