@@ -7,8 +7,8 @@ box_name = "debian.jessie64.libvirt.box"
 # List of nodes
 nodes = [
   { :memory => 2048, :cpu => 2 },
-  { :memory => 2048, :cpu => 2 },
-  # { :memory => 1024, :cpu => 2 },
+  { :memory => 1024, :cpu => 1 },
+  { :memory => 1024, :cpu => 1 },
 ]
 
 $distcc_install = <<-SCRIPT
