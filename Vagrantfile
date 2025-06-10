@@ -11,13 +11,6 @@ nodes = [
   { :memory => 1024, :cpu => 1 },
 ]
 
-$distcc_install = <<-SCRIPT
-apt update
-apt install -y make distcc gcc g++ tmux libz-dev git fakeroot build-essential ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison time neofetch
-# wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.gz
-# echo 'export DISTCC_HOSTS="10.200.1.2/24,10.200.1.3/24,10.200.1.4/24"' >> ~/home/vagrant/.bashrc
-SCRIPT
-
 # Auto-calculating IP-addresses in 10.200.1.0/24 begin with 2
 N_NODES = nodes.length
 DISTCC_HOSTS = (2..N_NODES+1).map {|i| "10.200.1.#{i}/24"}
