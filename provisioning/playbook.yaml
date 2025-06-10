@@ -1,0 +1,60 @@
+---
+- hosts: all
+  name: Init distcc on VM
+  gather_facts: true
+
+  tasks:
+    - name: Install packages
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+        pkg:
+          - make
+          - distcc
+          - gcc
+          - build-essential
+          - flex
+          - bison
+          - bc
+          - g++
+          - tmux
+          - libz-dev
+          - git
+          - fakeroot
+          - ncurses-dev
+          - xz-utils
+          - libssl-dev
+          - libelf-dev
+          - time
+          - hyperfine
+
+    - name: Copy kernel codebase to remote host
+      become: false
+      ansible.builtin.copy:
+        src: ./linux-6.13.tar.gz
+        dest: /home/vagrant/linux.tar.gz
+        owner: vagrant
+        mode: u=rw,g=r,o=r
+
+      # get_url:
+      #  url: "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.gz"
+      #  dest: /home/vagrant/linux.tar.gz
+
+    - name: Unarchive Kernel codebase
+      become: false
+      ansible.builtin.unarchive:
+        src: /home/vagrant/linux.tar.gz
+        dest: /home/vagrant/.
+        remote_src: true
+
+    - name: Create a tinyconfig for linux kernel
+      become: false
+      community.general.make:
+        chdir: /home/vagrant/linux-6.13/
+        target: tinyconfig
+        jobs: 1
+
+    - name: Run a distcc daemon
+      become: false
+      ansible.builtin.command: distccd --daemon --allow-private
+      changed_when: true

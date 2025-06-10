@@ -4,56 +4,47 @@
 # Default box
 box_name = "debian.jessie64.libvirt.box"
 
-# Master
-master_node = {
-  :hostname => "master", :ip => "10.200.1.2", :memory => 1024, :cpu => 1
-}
-
-# List of slaves
-slaves = [
-  { :memory => 4096,  :cpu => 4 },
+# List of nodes
+nodes = [
+  { :memory => 2048, :cpu => 2 },
+  { :memory => 1024, :cpu => 1 },
+  { :memory => 1024, :cpu => 1 },
 ]
 
-$distcc_install = <<-SCRIPT
-apt update
-apt install -y make distcc gcc g++ tmux libz-dev git fakeroot build-essential ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison time neofetch
-# wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.gz
-# echo 'export DISTCC_HOSTS="10.200.1.2/24,10.200.1.3/24,10.200.1.4/24"' >> ~/home/vagrant/.bashrc
+# Auto-calculating IP-addresses in 10.200.1.0/24 begin with 2
+N_NODES = nodes.length
+DISTCC_HOSTS = (2..N_NODES+1).map {|i| "10.200.1.#{i}/24"}
+
+
+# Set script for DISTCC_HOSTS in /etc/profile.d/
+$SET_ENVIRONMENT = <<SCRIPT
+tee "/etc/profile.d/distcc_var.sh" > "/dev/null" <<EOF
+# Set distcc_hosts variable
+export DISTCC_HOSTS="#{DISTCC_HOSTS.join(" ")}"
+EOF
 SCRIPT
 
 Vagrant.configure("2") do |config|
 
-  # Master node's config
-  config.vm.box_check_update = false
-  config.vm.define master_node[:hostname] do |nodeconfig|
-    nodeconfig.vm.box = box_name
-    nodeconfig.vm.hostname = master_node[:hostname]
-    nodeconfig.vm.network(:private_network, ip: master_node[:ip])
-    nodeconfig.vm.provision "shell", inline: $distcc_install
-    nodeconfig.vm.provision "file", source: "./linux-6.13.tar.gz", destination: "~/linux-6.13.tar.gz"
-    nodeconfig.vm.provider :libvirt do |vb|
-      vb.memory = master_node[:memory]
-      vb.cpus = master_node[:cpu]
-    end
-  end
-
-  # Slaves configs
-  slaves.each_with_index do |slave, i|
+  # Nodes configs
+  nodes.each_with_index do |node, i|
     config.vm.box_check_update = false
-    config.vm.define "slave-#{ i+1 }" do |nodeconfig|
-      # Default box-name (cause I have only it)
+    config.vm.define "node-#{ i+1 }" do |nodeconfig|
       nodeconfig.vm.box = box_name
       
-      # Hostname: slave-N
-      nodeconfig.vm.hostname = "slave-#{ i+1 }"
+      nodeconfig.vm.hostname = "node-#{ i+1 }"
 
-      # IP-address: 10.200.1.{N+2}
-      nodeconfig.vm.network :private_network, ip: "10.200.1.#{ i+3 }"
-      nodeconfig.vm.provision "shell", inline: $distcc_install
-      # nodeconfig.vm.provision "file", source: "./compile", destination: "~/compile"
+      nodeconfig.vm.network :private_network, ip: "10.200.1.#{ i+2 }"
+      nodeconfig.vm.provision "shell", inline: $SET_ENVIRONMENT, run: "always"
       nodeconfig.vm.provider :libvirt do |vb|
-        vb.memory = slave[:memory]
-        vb.cpus = slave[:cpu]
+        vb.memory = node[:memory]
+        vb.cpus = node[:cpu]
+      end
+
+      nodeconfig.vm.provision "ansible" do |ansible|
+        ansible.compatibility_mode = "2.0"
+        ansible.playbook = "provisioning/playbook.yaml"
+        ansible.become = true
       end
     end
   end
