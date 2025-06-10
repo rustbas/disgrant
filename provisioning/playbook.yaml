@@ -30,11 +30,17 @@
           - time
           - hyperfine
 
-    - name: Download Kernel codebase
+    - name: Copy kernel codebase to remote host
       become: false
-      get_url:
-        url: "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.gz"
+      copy:
+        src: ./linux-6.13.tar.gz
         dest: /home/vagrant/linux.tar.gz
+        owner: vagrant
+        mode: u=rw,g=r,o=r
+
+      # get_url:
+      #  url: "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.gz"
+      #  dest: /home/vagrant/linux.tar.gz
 
     - name: Unarchive Kernel codebase
       become: false
