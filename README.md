@@ -118,10 +118,16 @@ watch -n 1 distccmon-text
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
-| `make -j 1 CC="distcc gcc"` | 189.761 ± 1.060 | 188.897 | 191.190 | 2.46 ± 0.20 |
-| `make -j 2 CC="distcc gcc"` | 102.461 ± 0.618 | 102.067 | 103.527 | 1.33 ± 0.11 |
-| `make -j 3 CC="distcc gcc"` | 78.620 ± 1.707 | 77.167 | 81.441 | 1.02 ± 0.09 |
-| `make -j 4 CC="distcc gcc"` | 77.075 ± 6.359 | 72.561 | 87.707 | 1.00 |
+| `make -j 1 CC="distcc gcc"` | 191.077 ± 3.870 | 185.832 | 195.834 | 3.52 ± 0.10 |
+| `make -j 2 CC="distcc gcc"` | 98.323 ± 0.393 | 97.971 | 98.921 | 1.81 ± 0.04 |
+| `make -j 3 CC="distcc gcc"` | 70.357 ± 0.474 | 69.615 | 70.750 | 1.30 ± 0.03 |
+| `make -j 4 CC="distcc gcc"` | 59.751 ± 0.390 | 59.268 | 60.251 | 1.10 ± 0.02 |
+| `make -j 5 CC="distcc gcc"` | 55.480 ± 0.092 | 55.371 | 55.583 | 1.02 ± 0.02 |
+| `make -j 6 CC="distcc gcc"` | 55.859 ± 0.509 | 55.306 | 56.519 | 1.03 ± 0.02 |
+| `make -j 7 CC="distcc gcc"` | 55.979 ± 0.391 | 55.568 | 56.565 | 1.03 ± 0.02 |
+| `make -j 8 CC="distcc gcc"` | 55.496 ± 0.198 | 55.181 | 55.686 | 1.02 ± 0.02 |
+| `make -j 9 CC="distcc gcc"` | 54.911 ± 0.901 | 53.792 | 55.857 | 1.01 ± 0.03 |
+| `make -j 10 CC="distcc gcc"` | 54.287 ± 1.132 | 53.299 | 56.078 | 1.00 |
 
 [^1]: Википедия [Vagrant](https://ru.wikipedia.org/wiki/Vagrant).
 [^2]: Википедия [distcc](https://ru.wikipedia.org/wiki/Distcc).

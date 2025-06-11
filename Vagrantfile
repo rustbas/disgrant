@@ -6,9 +6,11 @@ box_name = "debian.jessie64.libvirt.box"
 
 # List of nodes
 nodes = [
-  { :memory => 2048, :cpu => 2 },
-  { :memory => 1024, :cpu => 1 },
-  { :memory => 1024, :cpu => 1 },
+  { :memory => 1536, :cpu => 2 },
+  { :memory => 1536, :cpu => 2 },
+  { :memory => 1536, :cpu => 2 },
+  { :memory => 1536, :cpu => 2 },
+  { :memory => 1536, :cpu => 2 },
 ]
 
 # Auto-calculating IP-addresses in 10.200.1.0/24 begin with 2
